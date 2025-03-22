@@ -1,17 +1,18 @@
+document.getElementById('loginForm').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Prevent page reload
 
-        function login() {
-    let username = document.getElementById('username').value;
-    let password = document.getElementById('password').value;
+    let formData = new FormData(this);
 
-    if (username === 'admin' && password === 'admin123') {
-        localStorage.setItem("isLoggedIn", "true");  // Store login state
-        window.location.href = "home.html";  // Redirect to home screen
+    let response = await fetch("/login", {
+        method: "POST",
+        body: formData
+    });
+
+    let data = await response.json();
+
+    if (data.error) {
+        document.getElementById('error-message').innerText = data.error;
     } else {
-        document.getElementById('error-message').innerText = 'Invalid credentials';
+        alert("Login successful! Frontend is connected to Flask backend.");
     }
-}
-
-function logout() {
-    document.getElementById('home-container').classList.add('hidden');
-    document.getElementById('login-container').classList.remove('hidden');
-}
+});
